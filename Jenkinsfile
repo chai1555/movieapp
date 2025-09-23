@@ -5,28 +5,29 @@ pipeline {
         // ===== FRONTEND BUILD =====
         stage('Build Frontend') {
             steps {
-                // Go to frontend folder (must contain package.json)
-                dir('movie-frontend') {
+                // CORRECTED: Changed 'movie-frontend' to 'frontendapp'
+                dir('frontendapp') {
                     bat 'npm install'
                     bat 'npm run build'
                 }
             }
         }
-        
-        // ===== FRONTEND DEPLOY TO TOMCAT =====
+
+        // ===== FRONTEND DEPLOY =====
         stage('Deploy Frontend to Tomcat') {
             steps {
                 bat '''
-                    REM === Remove old frontend if exists ===
+                    REM --- Remove old frontend if it exists ---
                     if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend" (
                         rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
                     )
 
-                    REM === Create new frontend folder in Tomcat ===
+                    REM --- Create new frontend folder in Tomcat ---
                     mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
 
-                    REM === Copy build output ===
-                    xcopy /E /I /Y movie-frontend\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
+                    REM --- Copy build output ---
+                    rem CORRECTED: Changed source from 'movie-frontend\\dist\\*' to 'frontendapp\\dist\\*'
+                    xcopy /E /I /Y frontendapp\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
                 '''
             }
         }
@@ -34,24 +35,20 @@ pipeline {
         // ===== BACKEND BUILD =====
         stage('Build Backend') {
             steps {
-                // Go to backend folder (must contain pom.xml)
-                dir('movie-backend') {
+                dir('BACKEND/movieapp') {
                     bat 'mvn clean package -DskipTests'
                 }
             }
         }
-        
-        // ===== BACKEND DEPLOY TO TOMCAT =====
+
+        // ===== BACKEND DEPLOY =====
         stage('Deploy Backend to Tomcat') {
             steps {
                 bat '''
-                    REM === Remove old WAR if exists ===
-                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movieapp.war" (
-                        del "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movieapp.war"
+                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\MovieBackend.war" (
+                        del "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\MovieBackend.war"
                     )
-
-                    REM === Copy new WAR ===
-                    copy movie-backend\\target\\movieapp.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
+                    copy BACKEND\\movieapp\\target\\MovieBackend.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
                 '''
             }
         }
@@ -59,10 +56,10 @@ pipeline {
 
     post {
         success {
-            echo "MovieApp pipeline completed successfully."
+            echo "Pipeline completed successfully."
         }
         failure {
-            echo "MovieApp pipeline failed. Check folder names and logs."
+            echo "Pipeline Failed. Check folder names and logs."
         }
     }
 }
