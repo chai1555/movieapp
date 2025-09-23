@@ -505,3 +505,6 @@ java.util.concurrent.TimeoutException
 
 !ENTRY org.springframework.tooling.boot.ls 1 0 2025-09-24 00:33:12.015
 !MESSAGE Classpath changed for project: movieapp
+
+!ENTRY org.springframework.tooling.boot.ls 1 0 2025-09-24 00:35:38.959
+!MESSAGE Classpath changed for project: movieapp
