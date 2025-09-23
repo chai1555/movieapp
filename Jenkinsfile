@@ -5,7 +5,6 @@ pipeline {
         // ===== FRONTEND BUILD =====
         stage('Build Frontend') {
             steps {
-                // CORRECTED: Changed 'movie-frontend' to 'frontendapp'
                 dir('frontendapp') {
                     bat 'npm install'
                     bat 'npm run build'
@@ -26,7 +25,6 @@ pipeline {
                     mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
 
                     REM --- Copy build output ---
-                    rem CORRECTED: Changed source from 'movie-frontend\\dist\\*' to 'frontendapp\\dist\\*'
                     xcopy /E /I /Y frontendapp\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movie-frontend"
                 '''
             }
@@ -45,10 +43,10 @@ pipeline {
         stage('Deploy Backend to Tomcat') {
             steps {
                 bat '''
-                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\MovieBackend.war" (
-                        del "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\MovieBackend.war"
+                    if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movieapp.war" (
+                        del "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\movieapp.war"
                     )
-                    copy BACKEND\\movieapp\\target\\MovieBackend.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
+                    copy BACKEND\\movieapp\\target\\movieapp.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
                 '''
             }
         }
