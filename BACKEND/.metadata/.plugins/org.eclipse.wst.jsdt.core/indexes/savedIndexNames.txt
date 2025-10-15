@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+C:\Users\ASUS\OneDrive\Desktop\CLCD P\BACKEND\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+938572454.index
