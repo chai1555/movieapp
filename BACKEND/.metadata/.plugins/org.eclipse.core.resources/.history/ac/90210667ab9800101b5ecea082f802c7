@@ -1,5 +1,0 @@
-package com.klef.dev.config;
-
-public class CorsConfig {
-
-}
